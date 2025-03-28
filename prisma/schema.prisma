@@ -14,10 +14,14 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String
-  password String
-  email    String
+  id           String   @id @default(uuid())
+  username     String   @unique
+  password     String
+  role         String?
+  weChatOpenId String?  @unique
+  status       String?
+  createTime   DateTime @default(now())
+  updateTime   DateTime @updatedAt
 
   @@map("t_user")
 }
