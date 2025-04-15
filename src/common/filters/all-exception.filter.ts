@@ -18,24 +18,29 @@ export class AllExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest();
 
     const httpStatus = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
+    const msg = exception instanceof HttpException ? exception['response'] : 'Internal server error';
 
-    const msg: unknown = exception instanceof HttpException ? exception['response'] : 'Internal server error';
-
-    const responseBody = {
-      Headers: request.headers,
-      query: request.query,
-      body: request.body,
-      params: request.params,
-      timestamp: new Date().toLocaleDateString(),
-      ip: requestIp.getClientIp(request),
-      exception: (exception as any)['name'],
-      error: msg,
+    const errorResponse = {
+      code: httpStatus,
+      data: {
+        path: request.url,
+        method: request.method,
+        timestamp: new Date().toLocaleDateString(),
+        ip: requestIp.getClientIp(request),
+        params: {
+          headers: request.headers,
+          query: request.query,
+          body: request.body,
+          params: request.params,
+        },
+      },
+      message: typeof msg === 'string' ? msg : msg['message'] || '服务器异常',
     };
 
     // 记录错误日志
-    this.logger.error(`路径: ${request.url} 方法: ${request.method}`, responseBody);
+    this.logger.error(`路径: ${request.url} 方法: ${request.method}`, errorResponse);
 
     // 发送响应
-    httpAdapter.reply(response, responseBody, httpStatus);
+    httpAdapter.reply(response, errorResponse, httpStatus);
   }
 }

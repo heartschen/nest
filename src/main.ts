@@ -4,6 +4,8 @@ import { Logger, ValidationPipe, VERSION_NEUTRAL, VersioningType } from '@nestjs
 import { ConfigService } from '@nestjs/config';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AllExceptionFilter } from './common/filters/all-exception.filter';
+import { TransformDateInterceptor } from './common/interceptors/transform-date.interceptor';
+import { TransformInterceptor } from './common/filters/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -27,6 +29,10 @@ async function bootstrap() {
 
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app.setGlobalPrefix(prefix);
+
+  // 添加全局日期转换拦截器
+  app.useGlobalInterceptors(new TransformDateInterceptor());
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   if (cors === 'true') {
     app.enableCors();
