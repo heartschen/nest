@@ -88,4 +88,13 @@ export class UserService {
   removeUser(id: number) {
     return `This action removes a #${id} user`;
   }
+
+  /**
+   * 查询所有用户
+   * @returns 用户列表
+   */
+  async getAllUsers() {
+    const users = await this.prisma.user.findMany();
+    return users.map(({ password, weChatOpenId, ...user }) => user);
+  }
 }

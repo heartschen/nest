@@ -13,7 +13,7 @@ async function bootstrap() {
   const port = configService.get<number>('PORT', 3000);
   const errorFilterFlag = configService.get<string>('ERROR_FILTER');
   const cors = configService.get<string>('CORS', 'false');
-  const prefix = configService.get<string>('PREFIX', 'api/v1');
+  // const prefix = configService.get<string>('PREFIX', 'api/v1');
   // 获取版本号
   // const versionStr = configService.get<string>('VERSION');
 
@@ -28,7 +28,7 @@ async function bootstrap() {
   // });
 
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
-  app.setGlobalPrefix(prefix);
+  // app.setGlobalPrefix(prefix);
 
   // 添加全局日期转换拦截器
   app.useGlobalInterceptors(new TransformDateInterceptor());

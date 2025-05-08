@@ -2,6 +2,9 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { Observable, map } from 'rxjs';
 import { format } from 'date-fns';
 
+/**
+ * 对所有时间戳进行转换
+ */
 @Injectable()
 export class TransformDateInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

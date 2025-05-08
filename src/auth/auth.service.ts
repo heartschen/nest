@@ -26,7 +26,7 @@ export class AuthService {
     const token = this.generateToken(newUser.id, newUser.username);
 
     return {
-      ...omit(newUser, ['password']),
+      ...omit(newUser, ['password', 'weChatOpenId']),
       token,
     };
   }
@@ -54,7 +54,7 @@ export class AuthService {
     // 生成 token
     const token = this.generateToken(user.id, user.username);
 
-    return { ...omit(user, ['password']), token };
+    return { ...omit(user, ['password', 'weChatOpenId']), token };
   }
 
   /**
