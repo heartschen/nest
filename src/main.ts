@@ -6,6 +6,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AllExceptionFilter } from './common/filters/all-exception.filter';
 import { TransformDateInterceptor } from './common/interceptors/transform-date.interceptor';
 import { TransformInterceptor } from './common/filters/transform.interceptor';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,22 +14,8 @@ async function bootstrap() {
   const port = configService.get<number>('PORT', 3000);
   const errorFilterFlag = configService.get<string>('ERROR_FILTER');
   const cors = configService.get<string>('CORS', 'false');
-  // const prefix = configService.get<string>('PREFIX', 'api/v1');
-  // 获取版本号
-  // const versionStr = configService.get<string>('VERSION');
-
-  // let version: string[] = [];
-  // if (versionStr && versionStr?.indexOf(',')) {
-  //   version = versionStr.split(',');
-  // }
-
-  // app.enableVersioning({
-  //   type: VersioningType.URI,
-  //   defaultVersion: typeof versionStr === 'undefined' ? VERSION_NEUTRAL : version,
-  // });
 
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
-  // app.setGlobalPrefix(prefix);
 
   // 添加全局日期转换拦截器
   app.useGlobalInterceptors(new TransformDateInterceptor());
@@ -50,6 +37,17 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+
+  // Swagger 配置
+  const config = new DocumentBuilder()
+    .setTitle('API 文档')
+    .setDescription('接口描述')
+    .setVersion('1.0')
+    .addTag('示例')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(port);
 }

@@ -32,13 +32,13 @@ model User {
   id           String           @id @default(uuid())
   username     String           @unique
   password     String
-  role         RoleEnum?        @default(USER)
-  weChatOpenId String?          @unique
-  status       StatusEnum?      @default(ACTIVE)
+  role         RoleEnum?        @default(USER) //角色
+  weChatOpenId String?          @unique // 微信标识
+  status       StatusEnum?      @default(ACTIVE) // 用户状态
   createTime   DateTime         @default(now())
   updateTime   DateTime         @updatedAt
   deleteTime   DateTime?
-  deleteFlag   DeleteStatusEnum @default(NORMAL)
+  deleteFlag   DeleteStatusEnum @default(NORMAL) // 删除状态
 
   @@map("t_user")
 }
